@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="H3C Config Generator Login" />
+    <meta name="theme-color" content="#d62828" />
+    <title>Register - H3C Config Generator</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Gaya Lokal -->
+    <link rel="stylesheet" href="../assets/css/style.css" />
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+    <main class="register-container-wrapper">
+      <div class="register-left">
+        <div class="welcome-message">
+          <h2>Daftar Akun</h2>
+          <p>Silakan isi data lengkap untuk mendaftar</p>
+        </div>
+        <!-- Form Register -->
+        <form id="registerForm" aria-label="Register form">
+          <div class="form-grid">
+            <div class="register-input-group">
+              <label for="first-name">Nama Depan</label>
+              <div class="register-input-wrapper">
+                <input type="text" id="first-name" name="first-name" autocomplete="given-name" required />
+              </div>
+            </div>
+            <div class="register-input-group">
+              <label for="last-name">Nama Belakang</label>
+              <div class="register-input-wrapper">
+                <input type="text" id="last-name" name="last-name" autocomplete="family-name" required />
+              </div>
+            </div>
+            <div class="register-input-group">
+              <label for="nik">NIK</label>
+              <div class="register-input-wrapper">
+                <input type="text" id="nik" name="nik" autocomplete="off" required />
+              </div>
+            </div>
+            <div class="register-input-group">
+              <label for="email">Email</label>
+              <div class="register-input-wrapper">
+                <input type="email" id="email" name="email" autocomplete="email" required />
+              </div>
+            </div>
+            <div class="register-input-group">
+              <label for="password">Kata Sandi</label>
+              <div class="register-input-wrapper">
+                <input type="password" id="password" name="password" minlength="9" autocomplete="off" required />
+              </div>
+            </div>
+            <div class="register-input-group">
+              <label for="departement">Departemen</label>
+              <div class="register-input-wrapper">
+                <input
+                  type="text"
+                  id="departement"
+                  name="departement"
+                  required
+                />
+              </div>
+            </div>
+            <div class="register-input-group">
+              <label for="position">Posisi</label>
+              <div class="register-input-wrapper">
+                <input type="text" id="position" name="position" required />
+              </div>
+            </div>
+            <div class="register-input-group">
+              <label for="partner-company">Perusahaan Partner</label>
+              <div class="register-input-wrapper">
+                <input
+                  type="text"
+                  id="partner-company"
+                  name="partner-company"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <button type="submit" class="register-button">
+            <span>Daftar</span>
+            <i class="fas fa-user-plus"></i>
+          </button>
+          <div class="register-link">
+            <a href="./login.html">ke Halaman masuk</a>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="../assets/js/main.js" defer></script>
+  </body>
+</html>
