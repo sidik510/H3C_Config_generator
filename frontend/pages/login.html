@@ -1,86 +1,69 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="H3C Config Generator Login" />
-    <meta name="theme-color" content="#d62828" />
-    <title>Login - H3C Config Generator</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - H3C Config Tool</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <div id="header-placeholder"></div>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <main class="login_container">
+    <h2>Login</h2>
+    <form id="login-form" class="form-box">
+      <label for="email">Email</label>
+      <input type="email" id="email" required>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+      <label for="password">Password</label>
+      <input type="password" id="password" required>
 
-    <!-- Gaya Lokal -->
-    <link rel="stylesheet" href="../assets/css/style.css" />
-  </head>
-  <body>
-    <div id="header-placeholder"></div>
+      <button type="submit">Masuk</button>
+      <p id="login-message" class="message"></p>
+    </form>
+    <div class="login-links">
+      <a href="register.html">Belum punya akun? Daftar</a> |
+      <a href="forgot-password.html">Lupa Password?</a>
+    </div>
+    
+  </main>
 
-    <main class="login-container-wrapper">
-      <div class="login-right">
-        <div class="welcome-message">
-          <h2>Selamat Datang</h2>
-          <p>Akses sistem internal H3C Anda di sini</p>
-        </div>
+  <div id="footer-placeholder"></div>
 
-        <form id="loginForm" aria-label="Login form">
-          <div class="login-input-group">
-            <label for="nik">Nomor Induk Karyawan</label>
-            <div class="login-input-icon-wrapper">
-              <i class="fas fa-id-card" aria-hidden="true"></i>
-              <input
-                type="text"
-                id="nik"
-                placeholder="NIK Anda"
-                required
-              />
-            </div>
-          </div>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-          <div class="login-input-group">
-            <label for="password">Password</label>
-            <div class="login-input-icon-wrapper">
-              <i class="fas fa-lock" aria-hidden="true"></i>
-              <input
-                type="password"
-                id="password"
-                placeholder="Password"
-                required
-              />
-            </div>
-          </div>
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
 
-          <div class="options">
-            <div class="remember-me">
-              <input type="checkbox" id="remember" />
-              <label for="remember">Ingat saya</label>
-            </div>
-            <div class="forgot-password">
-              <a href="./forgot-password.html">Lupa password?</a>
-            </div>
-          </div>
+      try {
+        const res = await fetch('http://localhost:3000/api/users/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
 
-          <button type="submit" class="login-button">
-            <span>Masuk</span>
-            <i class="fas fa-arrow-right"></i>
-          </button>
+        const data = await res.json();
+        const msgEl = document.getElementById('login-message');
 
-          <div class="register-link">
-            Belum punya akun? <a href="./register.html">Ajukan akun di sini</a>
-          </div>
+        if (res.ok) {
+          msgEl.textContent = data.message;
+          msgEl.style.color = 'green';
 
-          <div class="internal-notice" role="note">
-            <i class="fas fa-exclamation-circle"></i>
-            Untuk penggunaan internal perusahaan. Akses tidak sah dilarang.
-          </div>
-        </form>
-      </div>
-    </main>
-
-    <div id="footer-placeholder"></div>
-    <script src="../assets/js/main.js" defer></script>
-  </body>
+          // Simpan user ke localStorage
+          localStorage.setItem('user', JSON.stringify(data.user));
+          window.location.href = './dashboard.html';
+        } else {
+          msgEl.textContent = data.error || 'Gagal login.';
+          msgEl.style.color = 'red';
+        }
+      } catch (err) {
+        document.getElementById('login-message').textContent = 'Server tidak dapat dihubungi.';
+        document.getElementById('login-message').style.color = 'red';
+      }
+    });
+  </script>
+</body>
 </html>
