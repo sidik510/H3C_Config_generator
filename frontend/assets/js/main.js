@@ -24,4 +24,16 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch((error) => {
       console.error("Error loading footer:", error);
     });
+
+    document.querySelectorAll(".toggle-password").forEach(icon => {
+      icon.addEventListener("click", function () {
+        const input = document.querySelector(this.getAttribute("toggle"));
+        const type = input.getAttribute("type") === "password" ? "text" : "password";
+        input.setAttribute("type", type);
+    
+        // Toggle icon class
+        this.classList.toggle("bx-show");
+        this.classList.toggle("bx-hide");
+      });
+    });
 });

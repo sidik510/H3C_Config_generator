@@ -1,69 +1,53 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login - H3C Config Tool</title>
-  <link rel="stylesheet" href="../assets/css/style.css" />
-</head>
-<body>
-  <div id="header-placeholder"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - H3C Config Tool</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/boxicons@2.0.8/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
 
-  <main class="login_container">
-    <h2>Login</h2>
-    <form id="login-form" class="form-box">
-      <label for="email">Email</label>
-      <input type="email" id="email" required>
+    <main class="page-container">
+      <div class="main-wrapper">
+        <div class="welcome-message">
+          <h2>Login</h2>
+        </div>
 
-      <label for="password">Password</label>
-      <input type="password" id="password" required>
+        <div class="form-wrapper">
+          <form id="login-form" class="form-group">
+            <div class="input-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" required />
+            </div>
 
-      <button type="submit">Masuk</button>
-      <p id="login-message" class="message"></p>
-    </form>
-    <div class="login-links">
-      <a href="register.html">Belum punya akun? Daftar</a> |
-      <a href="forgot-password.html">Lupa Password?</a>
-    </div>
-    
-  </main>
+            <div class="input-group password-group">
+              <label for="password">Password</label>
+              <div class="password-wrapper">
+                <input type="password" id="password" name="password" required />
+                <i class="bx bx-hide toggle-password" toggle="#password"></i>
+              </div>
+            </div>
 
-  <div id="footer-placeholder"></div>
+            <button type="submit">Masuk</button>
+            <p id="login-message" class="login-message"></p>
+            <div class="back-link">
+              <a href="register.html">Belum punya akun? Daftar</a> |
+              <a href="forgot-password.html">Lupa Password?</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
 
-  <script src="../assets/js/main.js"></script>
-  <script>
-    document.getElementById('login-form').addEventListener('submit', async function (e) {
-      e.preventDefault();
+    <div id="footer-placeholder"></div>
 
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-
-      try {
-        const res = await fetch('http://localhost:3000/api/users/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-        const msgEl = document.getElementById('login-message');
-
-        if (res.ok) {
-          msgEl.textContent = data.message;
-          msgEl.style.color = 'green';
-
-          // Simpan user ke localStorage
-          localStorage.setItem('user', JSON.stringify(data.user));
-          window.location.href = './dashboard.html';
-        } else {
-          msgEl.textContent = data.error || 'Gagal login.';
-          msgEl.style.color = 'red';
-        }
-      } catch (err) {
-        document.getElementById('login-message').textContent = 'Server tidak dapat dihubungi.';
-        document.getElementById('login-message').style.color = 'red';
-      }
-    });
-  </script>
-</body>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/login.js"></script>
+  </body>
 </html>
