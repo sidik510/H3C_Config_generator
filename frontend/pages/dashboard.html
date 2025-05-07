@@ -4,59 +4,63 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard - H3C Config Tool</title>
-    <link rel="stylesheet" href="../../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
   </head>
   <body>
     <div id="header-placeholder"></div>
 
-    <main class="container">
-      <h2>Dashboard Teknisi</h2>
-      <p>Halo, <span id="user-name"></span>!</p>
+    <main class="page-container">
+      <div class="main-wrapper">
+        <div class="welcome-message">
+          <h2>Dashboard Teknisi</h2>
+          <p>Halo, <span id="user-name"></span>!</p>
+        </div>
+        <div class="form-wrapper">
+          <form id="config-form" class="form-group">
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="device-type">Jenis Perangkat</label>
+                <select id="device-type" name="device-type" required>
+                  <option value="">-- Pilih --</option>
+                  <option value="switch">Switch</option>
+                  <option value="router">Router</option>
+                  <option value="ap">Access Point</option>
+                </select>
+              </div>
 
-      <form id="config-form" class="form-box">
-        <label for="device-type">Jenis Perangkat</label>
-        <select id="device-type" required>
-          <option value="">-- Pilih --</option>
-          <option value="switch">Switch</option>
-          <option value="router">Router</option>
-          <option value="ap">Access Point</option>
-        </select>
+              <div class="input-group">
+                <label for="config_name">Config Type:</label>
+                <select id="config_name" name="config_name" required>
+                  <option value="">-- Pilih --</option>
+                  <option value="vlan_config">VLAN Config</option>
+                  <option value="trunk_config">Trunk Port</option>
+                  <option value="ip_route_config">Static Route</option>
+                  <option value="hostname_config">Hostname</option>
+                </select>
+              </div>              
 
-        <label>Config Type:</label>
-        <select id="config_name">
-          <option value="vlan_config">VLAN Config</option>
-          <option value="trunk_config">Trunk Port</option>
-          <option value="ip_route_config">Static Route</option>
-          <option value="hostname_config">Hostname</option></select
-        ><br />
+              <div id="dynamic-fields"></div>
+              </div>
+            </div>
 
-        <div id="dynamic-fields"></div>
+            <button type="submit">Generate Konfigurasi</button>
+          </form>
+        </div>
 
-        <label for="hostname">Hostname</label>
-        <input type="text" id="hostname" required />
-
-        <label for="ip">IP Address</label>
-        <input type="text" id="ip" required placeholder="contoh: 192.168.1.1" />
-
-        <label for="vlan">VLAN (opsional)</label>
-        <input type="number" id="vlan" placeholder="contoh: 10" />
-
-        <button type="submit">Generate Konfigurasi</button>
-      </form>
-
-      <div id="config-result-box" class="result-box">
-        <h3>Hasil Konfigurasi</h3>
-        <textarea id="config-output" rows="10" readonly></textarea>
-        <button onclick="copyConfig()">Salin</button>
-        <button id="save-btn">Simpan ke Database</button>
-        <button id="export-btn">Export ke TXT</button>
-        <button id="logout-btn">Logout</button>
+        <div id="config-result-box" class="result-box">
+          <h3>Hasil Konfigurasi</h3>
+          <textarea id="config-output" rows="10" readonly></textarea>
+          <button onclick="copyConfig()">Salin</button>
+          <button id="save-btn">Simpan ke Database</button>
+          <button id="export-btn">Export ke TXT</button>
+          <button id="logout-btn">Logout</button>
+        </div>
+        <hr />
+        <section id="history-section">
+          <h3>Riwayat Konfigurasi Anda</h3>
+          <div id="history-list"></div>
+        </section>
       </div>
-      <hr />
-      <section id="history-section">
-        <h3>Riwayat Konfigurasi Anda</h3>
-        <div id="history-list"></div>
-      </section>
     </main>
 
     <div id="footer-placeholder"></div>
