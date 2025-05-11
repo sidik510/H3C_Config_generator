@@ -37,3 +37,26 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 });
+
+const configDropdown = document.getElementById('device-type');
+
+if (configDropdown) {
+  configDropdown.addEventListener('change', function () {
+    const configSections = document.querySelectorAll('fieldset[id$="-fields"]');
+    configSections.forEach(section => section.style.display = 'none');
+
+    const selected = this.value;
+    if (selected) {
+      const activeSection = document.getElementById(`${selected}-fields`);
+      if (activeSection) {
+        activeSection.style.display = 'block';
+      }
+    }
+  });
+}
+
+document.getElementById("dns-option").addEventListener("change", function () {
+    const customField = document.getElementById("custom-dns-field");
+    customField.style.display = this.value === "custom" ? "block" : "none";
+  });
+

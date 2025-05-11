@@ -35,7 +35,7 @@
 body,
 html {
   font-family: var(--font-main);
-  background-color: var(--light);
+  background-color: var(--dark);
   color: var(--dark);
   min-height: 100vh;
   display: flex;
@@ -48,7 +48,7 @@ html {
   position: sticky;
   top: 0;
   height: var(--header-height);
-  background: white;
+  background: var(--dark);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   z-index: 100;
   padding: 0 1rem;
@@ -68,7 +68,7 @@ html {
   align-items: center;
   gap: 1rem;
   text-decoration: none;
-  color: var(--dark);
+  color: var(--light);
   font-weight: normal;
   font-size: 1.25rem;
   transition: transform 0.2s ease;
@@ -90,7 +90,7 @@ html {
 /* Footer Styles */
 .main-footer {
   height: var(--footer-height);
-  background: white;
+  background: var(--dark);
   border-top: 1px solid var(--gray-light);
   display: flex;
   justify-content: center;
@@ -122,12 +122,12 @@ html {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.welcome-message {  
+.welcome-message {
   background-color: var(--primary);
   color: var(--light);
   width: 100%;
@@ -137,7 +137,7 @@ html {
 }
 
 .welcome-message:hover {
-  background-color: var(--primary-light);
+  background-color: var(--dark);
   transform: scale(1.02);
 }
 
@@ -157,7 +157,7 @@ html {
   flex-direction: column;
   padding: var(--element-padding);
   width: 100%;
-  background-color: white;
+  background-color: var(--dark);
 }
 
 .form-group {
@@ -167,7 +167,7 @@ html {
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(2,1fr);
+  grid-template-columns: repeat(2, 1fr);
   margin-bottom: var(--element-margin);
   gap: 8px;
 }
@@ -180,7 +180,7 @@ html {
 
 .input-group label {
   font-size: 14px;
-  color: #333;
+  color: var(--gray-light);
   font-weight: 500;
 }
 
@@ -189,7 +189,7 @@ html {
   padding: 12px 16px;
   font-size: 1rem;
   border: 1px solid #ced4da;
-  border-radius: 12px;
+  border-radius: 6px;
   outline: none;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -257,7 +257,7 @@ html {
 }
 
 #match-message.success {
-  color: #198754;
+  color: var(--success);
 }
 
 #match-message.error {
@@ -300,6 +300,88 @@ button:active {
 
 .back-link a:hover {
   text-decoration: underline;
+}
+
+fieldset {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  color: var(--light);
+}
+
+.result-box {
+  width: 100%;
+  background-color: var(--dark);
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.result-box h3 {
+  color: var(--light);
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.25rem;
+}
+
+#config-output {
+  width: 100%;
+  resize: vertical;
+  color: var(--warning);
+  font-family: monospace;
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--light);
+  box-sizing: border-box;
+  background-color: var(--dark);
+}
+
+.result-box button {
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 10px 14px;
+  border: none;
+  background-color: var(--success);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: normal;
+  transition: background-color 0.2s ease;
+}
+
+.result-box button:hover {
+  background-color: #155fa0;
+}
+
+#history-section {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  background-color: #eef2f7;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
+
+#history-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+#history-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+  scrollbar-width: thin;
+}
+
+#history-list::-webkit-scrollbar {
+  width: 6px;
+}
+#history-list::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 4px;
 }
 
 @media (max-width: 600px) {
