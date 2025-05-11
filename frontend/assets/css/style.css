@@ -117,6 +117,17 @@ html {
   position: relative;
 }
 
+.rotating-icon {
+  color: var(--warning);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 40rem;
+  transform: translate(-50%, -50%);
+  opacity: 0.7;
+  animation: rotateIcon 4s linear infinite; /* Apply animation */
+}
+
 .main-wrapper {
   display: flex;
   flex-direction: column;
@@ -124,7 +135,7 @@ html {
   width: 100%;
   border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(241, 150, 150, 0.1);
 }
 
 .welcome-message {
@@ -387,5 +398,15 @@ fieldset {
 @media (max-width: 600px) {
   .form-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Keyframes for rotating icons */
+@keyframes rotateIcon {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg); /* Putar ikon 360 derajat */
   }
 }
