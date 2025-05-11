@@ -155,65 +155,51 @@
                     name="custom-dns"
                     placeholder="contoh: 1.1.1.1"
                   />
-                </div>
-
-                <!-- PORT SETTINGS -->
-                <!-- PORT 1 -->
-                <div class="input-group">
-                  <label for="port-1-id">Port 1 (misal ke Router/AP/PC)</label>
-                  <input
-                    type="text"
-                    id="port-1-id"
-                    name="port-1-id"
-                    placeholder="contoh: GE1/0/1"
-                  />
-                </div>
-
-                <div class="input-group">
-                  <label for="port-1-mode">Mode Port</label>
-                  <select id="port-1-mode" name="port-1-mode">
-                    <option value="access">Access</option>
-                    <option value="trunk">Trunk</option>
-                    <option value="route">Route</option>
-                  </select>
-                </div>
-
-                <div class="input-group">
-                  <label>
-                    <input type="checkbox" id="port-1-poe" name="port-1-poe" />
-                    Aktifkan POE
-                  </label>
-                </div>
-
-                <hr />
-
-                <!-- PORT 2 -->
-                <div class="input-group">
-                  <label for="port-2-id">Port 2 (misal ke Router/AP/PC)</label>
-                  <input
-                    type="text"
-                    id="port-2-id"
-                    name="port-2-id"
-                    placeholder="contoh: GE1/0/2"
-                  />
-                </div>
-
-                <div class="input-group">
-                  <label for="port-2-mode">Mode Port</label>
-                  <select id="port-2-mode" name="port-2-mode">
-                    <option value="access">Access</option>
-                    <option value="trunk">Trunk</option>
-                    <option value="route">Route</option>
-                  </select>
-                </div>
-
-                <div class="input-group">
-                  <label>
-                    <input type="checkbox" id="port-2-poe" name="port-2-poe" />
-                    Aktifkan POE
-                  </label>
-                </div>
+                </div>             
               </div>
+              <!-- PORT SETTINGS -->
+                <div id="port-container">
+                  <div class="port-block">
+                    <div class="input-group">
+                      <label for="port-1-id"
+                        >Port 1 (misal ke Router/AP/PC)</label
+                      >
+                      <input
+                        type="text"
+                        name="port-id"
+                        placeholder="contoh: GE1/0/1"
+                        required
+                      />
+                    </div>
+
+                    <div class="input-group">
+                      <label for="port-1-mode">Mode Port</label>
+                      <select name="port-mode">
+                        <option value="access">Access</option>
+                        <option value="trunk">Trunk</option>
+                        <option value="route">Route</option>
+                      </select>
+                    </div>
+
+                    <div class="input-group">
+                      <label>
+                        <input type="checkbox" name="port-poe" />
+                        Aktifkan POE
+                      </label>
+                    </div>
+
+                    <button
+                      type="button"
+                      class="remove-port-button"
+                      style="display: none"
+                    >
+                      Hapus Port
+                    </button>
+                    <hr />
+                  </div>
+                </div>
+
+                <button type="button" id="add-port-button">Tambah Port</button>
             </fieldset>
 
             <button type="submit" id="generate-btn">
