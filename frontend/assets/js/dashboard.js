@@ -59,20 +59,33 @@ function generateSwitchConfig() {
   const vlanId = getValue("vlan-id");
   const vlanIp = getValue("vlan-ip");
   const vlanSubnet = getValue("vlan-subnet");
+  const vlanNetwork = getValue("vlan-network");
 
   if (getValue("dhcp-enable-global") === "yes") config += "dhcp enable\n";
   if (vlanId && vlanIp && vlanSubnet) {
-    config += `vlan ${vlanId}\n`;
-    config += `interface Vlan-interface${vlanId}\n ip address ${vlanIp} ${cidrToNetmask(vlanSubnet)}\n`;
+    config += `vlan ${vlanId}\n exit\n`;
+    config += `interface Vlan-interface${vlanId}\n ip address ${vlanIp} ${cidrToNetmask(
+      vlanSubnet
+    )}\n`;
   }
 
-  if (vlanId && getValue("vlan-network") && getValue("dhcp-range-start") && getValue("dhcp-range-end") && getValue("dhcp-gateway")) {
+  if (
+    vlanId &&
+    getValue("vlan-network") &&
+    getValue("dhcp-range-start") &&
+    getValue("dhcp-range-end") &&
+    getValue("dhcp-gateway")
+  ) {
     config += `dhcp server ip-pool vlan${vlanId}\n`;
-    config += ` network ${vlanIp} ${cidrToNetmask(vlanSubnet)}\n`;
+    config += ` network ${vlanNetwork} mask ${cidrToNetmask(vlanSubnet)}\n`;
     config += ` gateway-list ${getValue("dhcp-gateway")}\n`;
-    config += ` excluded-ip-address ${getValue("dhcp-gateway")}\n`;
-    config += ` ip range ${getValue("dhcp-range-start")} ${getValue("dhcp-range-end")}\n`;
-    const dns = getValue("dns-option") === "custom" ? getValue("custom-dns") : getValue("dns-option");
+    config += ` address range ${getValue("dhcp-range-start")} ${getValue(
+      "dhcp-range-end"
+    )}\n`;
+    const dns =
+      getValue("dns-option") === "custom"
+        ? getValue("custom-dns")
+        : getValue("dns-option");
     config += ` dns-list ${dns}\n`;
     config += ` interface Vlan-interface${vlanId}\n dhcp server apply ip-pool vlan${vlanId}\n`;
   }
@@ -84,12 +97,15 @@ function generateSwitchConfig() {
 
     config += `interface ${portName}\n`;
     if (portType === "access" && vlanId) {
-      config += ` port link-type access\n port default vlan ${vlanId}\n`;
+      config += ` port link-type access\n port access vlan ${vlanId}\n`;
     } else if (portType === "trunk") {
       config += ` port link-type trunk\n port trunk permit vlan ${vlanId}\n`;
     }
     if (portPoe) config += ` poe enable\n`;
   });
+
+  config += `exit\n`;
+  config += `s f\n`;
 
   return config;
 }
@@ -133,10 +149,27 @@ async function saveConfig() {
     user_id: user.id,
     device_type: getValue("device-type"),
     hostname: getValue("hostname"),
-    ip: getValue("ip"),
-    vlan: getValue("vlan"),
+    dhcp_enable_global: getValue("dhcp-enable-global"),
+    vlan_id: getValue("vlan-id"),
+    vlan_ip: getValue("vlan-ip"),
+    vlan_subnet: getValue("vlan-subnet"),
+    vlan_network: getValue("vlan-network"),
+    dhcp_range_start: getValue("dhcp-range-start"),
+    dhcp_range_end: getValue("dhcp-range-end"),
+    dhcp_gateway: getValue("dhcp-gateway"),
+    dns_option: getValue("dns-option"),
+    custom_dns: getValue("custom-dns"),
     config_text: config,
+    ports: [], // array port dinamis
   };
+
+  document.querySelectorAll("#port-container .port-block").forEach((entry) => {
+    payload.ports.push({
+      port_id: entry.querySelector('input[name="port-id"]').value,
+      port_mode: entry.querySelector('select[name="port-mode"]').value,
+      port_poe: entry.querySelector('input[name="port-poe"]').checked,
+    });
+  });
 
   try {
     const res = await fetch("http://localhost:3000/api/configs/save", {
@@ -146,9 +179,9 @@ async function saveConfig() {
     });
 
     const data = await res.json();
-    alert(data.message || "Gagal menyimpan");
+    alert(data.message || "Konfigurasi berhasil disimpan");
   } catch (err) {
-    alert("Server tidak dapat dihubungi");
+    alert("Gagal menyimpan konfigurasi.");
   }
 }
 
@@ -167,7 +200,9 @@ async function loadConfigHistory() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   try {
-    const res = await fetch(`http://localhost:3000/api/configs/history/${user.id}`);
+    const res = await fetch(
+      `http://localhost:3000/api/configs/history/${user.id}`
+    );
     const history = await res.json();
     renderHistoryList(history);
   } catch (err) {
@@ -190,7 +225,9 @@ function renderHistoryList(history) {
     const div = document.createElement("div");
     div.classList.add("history-item");
     div.innerHTML = `
-      <p><strong>${item.device_type.toUpperCase()}</strong> - ${item.hostname} (${item.ip_address})</p>
+      <p><strong>${item.device_type.toUpperCase()}</strong> - ${
+      item.hostname
+    } (${item.ip_address})</p>
       <pre>${item.config_text}</pre>
       <small>Dibuat pada: ${new Date(item.created_at).toLocaleString()}</small>
       <hr />
