@@ -1,22 +1,15 @@
-const db = require('../config/db');
+// backend/model/userModel.js
+import db from "../config/db.js"; // Asumsikan db.js export koneksi MySQL dengan mysql2/promise
 
-function createUser(name, email, hashedPassword, role, callback) {
-  const sql = 'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)';
-  db.query(sql, [name, email, hashedPassword, role], (err, result) => {
-    if (err) return callback(err);
-    callback(null, result);
-  });
-}
+export const getUserByEmail = async (email) => {
+  const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
+  return rows[0];
+};
 
-function findUserByEmail(email, callback) {
-  const sql = 'SELECT * FROM users WHERE email = ? LIMIT 1';
-  db.query(sql, [email], (err, results) => {
-    if (err) return callback(err, null);
-    callback(null, results[0]);
-  });
-}
-
-module.exports = {
-  createUser,
-  findUserByEmail
+export const createUser = async (name, email, password, role) => {
+  const [result] = await db.query(
+    "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
+    [name, email, password, role]
+  );
+  return result;
 };

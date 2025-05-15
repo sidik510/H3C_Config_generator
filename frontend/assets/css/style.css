@@ -395,6 +395,13 @@ fieldset {
   border-radius: 4px;
 }
 
+.tab-btn.active {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+
 @media (max-width: 600px) {
   .form-grid {
     grid-template-columns: 1fr;

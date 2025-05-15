@@ -155,51 +155,51 @@
                     name="custom-dns"
                     placeholder="contoh: 1.1.1.1"
                   />
-                </div>             
+                </div>
               </div>
               <!-- PORT SETTINGS -->
-                <div id="port-container">
-                  <div class="port-block">
-                    <div class="input-group">
-                      <label for="port-1-id"
-                        >Port 1 (misal ke Router/AP/PC)</label
-                      >
-                      <input
-                        type="text"
-                        name="port-id"
-                        placeholder="contoh: GE1/0/1"
-                        required
-                      />
-                    </div>
-
-                    <div class="input-group">
-                      <label for="port-1-mode">Mode Port</label>
-                      <select name="port-mode">
-                        <option value="access">Access</option>
-                        <option value="trunk">Trunk</option>
-                        <option value="route">Route</option>
-                      </select>
-                    </div>
-
-                    <div class="input-group">
-                      <label>
-                        <input type="checkbox" name="port-poe" />
-                        Aktifkan POE
-                      </label>
-                    </div>
-
-                    <button
-                      type="button"
-                      class="remove-port-button"
-                      style="display: none"
+              <div id="port-container">
+                <div class="port-block">
+                  <div class="input-group">
+                    <label for="port-1-id"
+                      >Port 1 (misal ke Router/AP/PC)</label
                     >
-                      Hapus Port
-                    </button>
-                    <hr />
+                    <input
+                      type="text"
+                      name="port-id"
+                      placeholder="contoh: GE1/0/1"
+                      required
+                    />
                   </div>
-                </div>
 
-                <button type="button" id="add-port-button">Tambah Port</button>
+                  <div class="input-group">
+                    <label for="port-1-mode">Mode Port</label>
+                    <select name="port-mode">
+                      <option value="access">Access</option>
+                      <option value="trunk">Trunk</option>
+                      <option value="route">Route</option>
+                    </select>
+                  </div>
+
+                  <div class="input-group">
+                    <label>
+                      <input type="checkbox" name="port-poe" />
+                      Aktifkan POE
+                    </label>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="remove-port-button"
+                    style="display: none"
+                  >
+                    Hapus Port
+                  </button>
+                  <hr />
+                </div>
+              </div>
+
+              <button type="button" id="add-port-button">Tambah Port</button>
             </fieldset>
 
             <button type="submit" id="generate-btn">
@@ -211,7 +211,7 @@
         <div id="config-result-box" class="result-box">
           <h3>Hasil Konfigurasi</h3>
           <textarea id="config-output" rows="10" readonly></textarea>
-          <button onclick="copyConfig()">Salin</button>
+          <button id="copy-btn" onclick="copyConfig()">Salin</button>
           <button id="save-btn">Simpan ke Database</button>
           <button id="export-btn">Export ke TXT</button>
           <button id="logout-btn">Logout</button>
@@ -219,6 +219,10 @@
         <hr />
         <section id="history-section">
           <h3>Riwayat Konfigurasi Anda</h3>
+          <div id="history-tab">
+            <button id="tab-active">Histori Aktif</button>
+            <button id="tab-deleted">Histori Terhapus</button>
+          </div>
           <div id="history-list"></div>
         </section>
       </div>

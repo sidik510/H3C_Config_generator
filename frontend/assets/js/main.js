@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   loadHeaderFooter();
   initTogglePassword();
-  toggleDeviceFields();
   initCustomDNS();
   initPortManagement();
+
+  // Fungsi yang hanya dijalankan jika elemen ada
+  setupDeviceFields();
 });
 
 // === MODULE 1: HEADER & FOOTER ===
@@ -41,35 +43,36 @@ function initTogglePassword() {
   });
 }
 
-// === MODULE 4: Menampilkan Fieldset ===
+// === MODULE 3: Menampilkan Fieldset Berdasarkan Perangkat ===
+function setupDeviceFields() {
+  const deviceTypeElement = document.getElementById("device-type");
 
-// Fungsi untuk menampilkan fieldset berdasarkan jenis perangkat yang dipilih
-function toggleDeviceFields() {
-  const deviceType = document.getElementById("device-type").value;
+  if (!deviceTypeElement) return; // Hanya jalankan jika elemen ada
+
+  const deviceType = deviceTypeElement.value;
   const switchFields = document.getElementById("switch-fields");
-  // const routerFields = document.getElementById("router-fields"); // Jika ada fieldset untuk router
-  // const apFields = document.getElementById("ap-fields"); // Jika ada fieldset untuk AP
+  // const routerFields = document.getElementById("router-fields");
+  // const apFields = document.getElementById("ap-fields");
 
   // Sembunyikan semua fieldset terlebih dahulu
-  switchFields.style.display = "none";
-  // routerFields.style.display = "none";
-  // apFields.style.display = "none";
+  if (switchFields) switchFields.style.display = "none";
+  // if (routerFields) routerFields.style.display = "none";
+  // if (apFields) apFields.style.display = "none";
 
   // Tampilkan fieldset berdasarkan jenis perangkat yang dipilih
-  if (deviceType === "switch") {
+  if (deviceType === "switch" && switchFields) {
     switchFields.style.display = "block";
-  } 
-  // else if (deviceType === "router") {
-    // routerFields.style.display = "block";
-  // } else if (deviceType === "ap") {
-    // apFields.style.display = "block";
+  }
+  // else if (deviceType === "router" && routerFields) {
+  //   routerFields.style.display = "block";
+  // } else if (deviceType === "ap" && apFields) {
+  //   apFields.style.display = "block";
   // }
-}
 
-// Menambahkan event listener untuk mendeteksi perubahan pilihan perangkat
-document
-  .getElementById("device-type")
-  .addEventListener("change", toggleDeviceFields);
+  deviceTypeElement.addEventListener("change", () => {
+    setupDeviceFields(); // Update fieldset saat perangkat dipilih
+  });
+}
 
 // === MODULE 4: CUSTOM DNS FIELD ===
 function initCustomDNS() {
@@ -78,8 +81,7 @@ function initCustomDNS() {
 
   if (dnsSelect && customField) {
     dnsSelect.addEventListener("change", () => {
-      customField.style.display =
-        dnsSelect.value === "custom" ? "block" : "none";
+      customField.style.display = dnsSelect.value === "custom" ? "block" : "none";
     });
   }
 }
