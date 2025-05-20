@@ -8,12 +8,13 @@ class NetworkConfigApp {
   // === INITIALIZATION ===
   async init() {
     try {
-      this.checkAuth();
-      this.bindUIEvents();
+      await this.checkAuth();
+      this.updateUserUI(this.user);
       await this.loadConfigHistory();
+      this.bindUIEvents();
     } catch (error) {
       console.error("App initialization failed:", error);
-      this.showError("Failed to initializa application");
+      this.showError("Failed to initialize application");
     }
   }
 
@@ -34,10 +35,32 @@ class NetworkConfigApp {
     }
   }
 
-  updateUserUI(user) {
-    const userNameEl = document.getElementById("user-name");
-    if (userNameEl) userNameEl.textContent = this.user?.name || "User";
-  }
+  // === PORT MANAGEMENT ===
+  initPortManagement = () => {
+    const portGrid = document.getElementById("port-grid");
+    if (!portGrid) return;
+
+    const portControls = document.createElement("div");
+    portControls.className = "port-controls";
+    portControls.innerHTML = `
+        <input type="text" name="port-id" placeholder="Port ID (e.g., Gig1/0/1)" required />
+        <select name="port-mode">
+          <option value="access">Access</option>
+          <option value="trunk">Trunk</option>
+        </select>
+        <label class="poe-toggle">
+          <input type="checkbox" name="port-poe" />
+          <span>POE</span>
+        </label>
+        <button class="remove-port">Hapus</button>
+    `;
+
+    portControls.querySelector(".remove-port").addEventListener("click", () => {
+      portGrid.removeChild(portControls);
+    });
+
+    portGrid.appendChild(portControls);
+  };
 
   logout = () => {
     localStorage.removeItem("user");
@@ -61,109 +84,132 @@ class NetworkConfigApp {
     Object.entries(eventMap).forEach(([id, { event: handler }]) => {
       const el = document.getElementById(id);
       if (el) {
-        const event = id === "config-form" ? "submit" : "click";
-        el.addEventListener(event, handler.bind(this));
+        // event submit untuk form, click untuk tombol
+        const eventType = id === "config-form" ? "submit" : "click";
+        el.addEventListener(eventType, handler.bind(this));
       } else {
         console.warn(`Element with ID ${id} not found.`);
       }
     });
   }
 
+  updateUserUI(user) {
+    const nameSpan = document.getElementById("name");
+    if (nameSpan) {
+      nameSpan.textContent = user?.name || "User";
+    }
+  }
+
   // === CONFIGURATION GENERATION ===
   generateConfig(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const device = this.getValue("device-type");
-    const hostname = this.getValue("hostname") || "switch";
-    let config = `system-view\nsysname ${hostname}\n`;
+    try {
+      const device = this.getValue("device-type");
+      const hostname = this.getValue("hostname") || "switch";
+      let config = `system-view\nsysname ${hostname}\n`;
 
-    if (device === "switch") {
-      config += this.generateSwitchConfig();
+      if (device === "switch") {
+        config += this.generateSwitchConfig();
+      }
+
+      config += "exit\nsave force\n";
+      this.setValue("config-output", config);
+    } catch (error) {
+      console.error("Error generating config:", error);
+      this.showError("Failed to generate configuration");
+    }
+  }
+
+  generateSwitchConfig() {
+    let config = "";
+
+    // DHCP Global
+    if (this.getValue("dhcp-enable-global") === "yes") {
+      config += "dhcp enable\n";
     }
 
-    config += "exit\nsave force\n";
-    this.setValue("config-output", config);
-  } catch (error) {
-    console.error("Error generating config:", error);
-    this.showError("Failed to generate configuration");
-  }
-}
+    // VLAN Config
+    const vlanId = this.getValue("vlan-id");
+    const vlanIp = this.getValue("vlan-ip");
+    const vlanSubnet = this.getValue("vlan-subnet");
 
-generateSwitchConfig() {
-  let config = "";
+    if (vlanId && vlanIp && vlanSubnet) {
+      config += this.generateVlanConfig(vlanId, vlanIp, vlanSubnet);
+    }
 
-  // DHCP Global
-  if (this.getValue("dhcp-enable-global") === "yes") {
-    config += "dhcp enable\n";
-  }
+    // Port Configs
+    config += this.generatePortConfigs(vlanId);
 
-  // VLAN Config
-  const vlanId = this.getValue("vlan-id");
-  const vlanIp = this.getValue("vlan-ip");
-  const vlanSubnet = this.getValue("vlan-subnet");
-
-  if (vlanId && vlanIp && vlanSubnet) {
-    config += this.generateVlanConfig(vlanId, vlanIp, vlanSubnet);
+    return config;
   }
 
-  // Port Configs
-  config += this.generatePortConfigs(vlanId);
-
-  return config;
-}
-
-generateVlanConfig(vlanId, vlanIp, vlanSubnet) {
-  let config = `vlan ${vlanId}\nexit\n`;
-  config += `interface Vlan-interface${vlanId}\n`;
-  config += ` ip address ${vlanIp} ${this.cidrToNetmask(vlanSubnet)}\n`;
-  config += `exit\n`;
-
-  // DHCP Server Pool
-  if (this.getValue("dhcp-range-start") && this.getValue("dhcp-range-end")) {
-    const dns = this.getValue("dns-option") === "custom"
-      ? this.getValue("custom-dns")
-      : this.getValue("dns-option");
-
-    config += `dhcp server ip-pool VLAN${vlanId}\n`;
-    config += ` network ${this.getValue("vlan-network")} mask ${this.cidrToNetmask(vlanSubnet)}\n`;
-    config += ` gateway-list ${this.getValue("dhcp-gateway") || vlanIp}\n`;
-    config += ` dns-list ${dns}\n`;
-    config += ` address range ${this.getValue("dhcp-range-start")} ${this.getValue("dhcp-range-end")}\n`;
+  generateVlanConfig(vlanId, vlanIp, vlanSubnet) {
+    let config = `vlan ${vlanId}\nexit\n`;
+    config += `interface Vlan-interface${vlanId}\n`;
+    config += ` ip address ${vlanIp} ${this.cidrToNetmask(vlanSubnet)}\n`;
     config += `exit\n`;
 
-    config += `interface Vlan-interface${vlanId}\n`;
-    config += ` dhcp server apply ip-pool VLAN${vlanId}\nexit\n`;
-  }
+    // DHCP Server Pool
+    if (this.getValue("dhcp-range-start") && this.getValue("dhcp-range-end")) {
+      const dns =
+        this.getValue("dns-option") === "custom"
+          ? this.getValue("custom-dns")
+          : this.getValue("dns-option");
 
-  return config;
-}
+      config += `dhcp server ip-pool VLAN${vlanId}\n`;
+      config += ` network ${this.getValue(
+        "vlan-network"
+      )} mask ${this.cidrToNetmask(vlanSubnet)}\n`;
+      config += ` gateway-list ${this.getValue("dhcp-gateway") || vlanIp}\n`;
+      config += ` dns-list ${dns}\n`;
+      config += ` address range ${this.getValue(
+        "dhcp-range-start"
+      )} ${this.getValue("dhcp-range-end")}\n`;
+      config += `exit\n`;
 
-generatePortConfigs(vlanId) {
-  let config = "";
-  const portBlocks = document.querySelectorAll("#port-container .port-block");
-
-  portBlocks.forEach((block) => {
-    const portId = block.querySelector('input[name="port-id"]').value;
-    if (!portId) return;
-
-    const portMode = block.querySelector('select[name="port-mode"]').value;
-    const portPoe = block.querySelector('input[name="port-poe"]').checked;
-
-    config += `interface ${portId}\n`;
-
-    if (portMode === "access" && vlanId) {
-      config += ` port link-type access\n port access vlan ${vlanId}\n`;
-    } else if (portMode === "trunk" && vlanId) {
-      config += ` port link-type trunk\n port trunk permit vlan ${vlanId}\n`;
+      config += `interface Vlan-interface${vlanId}\n`;
+      config += ` dhcp server apply ip-pool VLAN${vlanId}\nexit\n`;
     }
 
-    if (portPoe) config += ` poe enable\n`;
-  });
+    return config;
+  }
 
-  return config;
-}
+  generatePortConfigs(vlanId) {
+    let config = "";
+    const portBlocks = document.querySelectorAll(".port-controls");
 
+    portBlocks.forEach((block) => {
+      const portId = block.querySelector('input[name="port-id"]').value;
+      if (!portId) return;
+
+      const portMode = block.querySelector('select[name="port-mode"]').value;
+      const portPoe = block.querySelector('input[name="port-poe"]').checked;
+
+      config += `interface ${portId}\n`;
+
+      if (portMode === "access" && vlanId) {
+        config += ` port link-type access\n port access vlan ${vlanId}\n`;
+      } else if (portMode === "trunk" && vlanId) {
+        config += ` port link-type trunk\n port trunk permit vlan ${vlanId}\n`;
+      }
+
+      if (portPoe) config += ` poe enable\n`;
+    });
+
+    return config;
+  }
+
+  collectPortData() {
+    const portBlocks = document.querySelectorAll(".port-controls"); // Sesuaikan selector dengan struktur HTML Anda
+    return Array.from(portBlocks).map((block) => {
+      return {
+        port_id: block.querySelector('input[name="port-id"]').value,
+        port_mode: block.querySelector('select[name="port-mode"]').value,
+        port_poe: block.querySelector('input[name="port-poe"]').checked,
+      };
+    });
+  }
 
   // === CONFIG MANAGEMENT ===
   async saveConfig() {
@@ -171,15 +217,29 @@ generatePortConfigs(vlanId) {
       const configText = this.getValue("config-output");
       const deviceType = this.getValue("device-type");
       const hostname = this.getValue("hostname") || "unnamed-device";
+      const ports = this.collectPortData();
 
       if (!configText) {
         throw new Error("No configuration to save");
       }
 
       const response = await this.apiRequest("/", "POST", {
+        // user_id: this.user.id,
         device_type: deviceType,
         hostname: hostname,
+        dhcp_enable_global: this.getValue("dhcp-enable-global"),
+        vlan_id: this.getValue("vlan-id"),
+        vlan_ip: this.getValue("vlan-ip"),
+        vlan_subnet: this.getValue("vlan-subnet"),
+        vlan_network: this.getValue("vlan-network"),
+        dhcp_range_start: this.getValue("dhcp-range-start"),
+        dhcp_range_end: this.getValue("dhcp-range-end"),
+        dhcp_gateway: this.getValue("dhcp-gateway"),
+        dns_option: this.getValue("dns-option"),
+        custom_dns: this.getValue("custom-dns"),
         config_text: configText,
+        // config_hash: this.generateConfigHash(configText),
+        ports: ports,
       });
 
       this.showSuccess("Configuration saved successfully");
@@ -191,13 +251,14 @@ generatePortConfigs(vlanId) {
   }
 
   async deleteConfig(configId) {
+    console.log("Deleting configId:", configId);
     try {
       if (!confirm("Are you sure you want to delete this configuration?"))
         return;
 
       const response = await this.apiRequest(`/${configId}`, "DELETE");
       this.showSuccess("Configuration deleted successfully");
-      await this.loadConfigHistory();
+      await this.loadConfigHistory(); // Refresh daftar konfigurasi
     } catch (error) {
       console.error("Error deleting config:", error);
       this.showError(error.message || "Failed to delete configuration");
@@ -211,7 +272,7 @@ generatePortConfigs(vlanId) {
 
       await this.apiRequest(`/restore/${configId}`, "PATCH");
       this.showSuccess("Configuration restored successfully");
-      this.loadDeletedHistory(); // Refresh daftar terhapus
+      this.loadDeletedHistory(); // Refresh daftar konfigurasi yang sudah dihapus
     } catch (error) {
       console.error("Error restoring config:", error);
       this.showError(error.message || "Failed to restore configuration");
@@ -254,7 +315,7 @@ generatePortConfigs(vlanId) {
     document.querySelectorAll(".delete-btn").forEach((button) => {
       button.addEventListener("click", (e) => {
         const configId = e.target.dataset.configId;
-        this.deleteConfig(configId); // pastikan ada fungsi deleteConfig()
+        this.deleteConfig(configId);
       });
     });
   }
@@ -315,22 +376,32 @@ generatePortConfigs(vlanId) {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("Authentication required");
 
+    const headers = new Headers({
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    });
+
     const options = {
       method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+      headers,
     };
 
     if (body) options.body = JSON.stringify(body);
 
     const response = await fetch(`${this.API_BASE_URL}${endpoint}`, options);
-    const data = await response.json();
+
+    // Untuk menghindari error jika response bukan JSON:
+    let data;
+    try {
+      data = await response.json();
+    } catch {
+      data = null;
+    }
 
     if (!response.ok) {
       throw new Error(
-        data.message || `Request failed with status ${response.status}`
+        (data && data.message) ||
+          `Request failed with status ${response.status}`
       );
     }
 
@@ -408,35 +479,6 @@ generatePortConfigs(vlanId) {
   showError(message) {
     alert(message); // Replace with a proper notification system
   }
-
-  // === PORT MANAGEMENT ===
-  initPortManagement = () => {
-    const portContainer = document.getElementById("port-container");
-    if (!portContainer) return;
-
-    const portBlock = document.createElement("div");
-    portBlock.className = "port-block";
-    portBlock.innerHTML = `
-      <div class="port-controls">
-        <input type="text" name="port-id" placeholder="Port ID (e.g., Gig1/0/1)" required />
-        <select name="port-mode">
-          <option value="access">Access</option>
-          <option value="trunk">Trunk</option>
-        </select>
-        <label class="poe-toggle">
-          <input type="checkbox" name="port-poe" />
-          <span>POE</span>
-        </label>
-        <button class="remove-port">×</button>
-      </div>
-    `;
-
-    portBlock.querySelector(".remove-port").addEventListener("click", () => {
-      portContainer.removeChild(portBlock);
-    });
-
-    portContainer.appendChild(portBlock);
-  };
 }
 
 // Initialize the application

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard - H3C Config Tool</title>
-    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/dashboard.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/boxicons@2.0.8/css/boxicons.min.css"
       rel="stylesheet"
@@ -13,208 +13,190 @@
   <body>
     <div id="header-placeholder"></div>
 
-    <main class="page-container">
+    <main class="dashboard-container">
       <div class="main-wrapper">
         <div class="welcome-message">
           <h2>Dashboard Teknisi</h2>
-          <p>Halo, <span id="user-name"></span>!</p>
+          <p>Halo, <span id="name"></span>!</p>
         </div>
-        <div class="form-wrapper">
-          <form id="config-form" class="form-group">
-            <div class="input-group">
-              <label for="device-type">Jenis Perangkat</label>
-              <select id="device-type" name="device-type" required>
-                <option value="">-- Pilih --</option>
-                <option value="switch">Switch</option>
-                <option value="router">Router</option>
-                <option value="ap">Access Point</option>
-              </select>
-            </div>
-
-            <fieldset
-              id="switch-fields"
-              class="grid-layout"
-              style="display: none"
-            >
-              <legend>Konfigurasi Switch</legend>
-              <div class="form-grid">
-                <!-- GLOBAL SETTINGS -->
-                <div class="input-group">
-                  <label for="hostname">Hostname</label>
-                  <input
-                    type="text"
-                    id="hostname"
-                    name="hostname"
-                    placeholder="contoh: Switch1"
-                    required
-                  />
-                </div>
-
-                <div class="input-group">
-                  <label>Aktifkan DHCP Global?</label>
-                  <select
-                    id="dhcp-enable-global"
-                    name="dhcp-enable-global"
-                    required
-                  >
-                    <option value="yes">Ya</option>
-                    <option value="no">Tidak</option>
-                  </select>
-                </div>
-
-                <!-- VLAN SETTINGS -->
-                <div class="input-group">
-                  <label for="vlan-id">VLAN ID</label>
-                  <input
-                    type="number"
-                    id="vlan-id"
-                    name="vlan-id"
-                    placeholder="contoh: 10"
-                  />
-                </div>
-
-                <div class="input-group">
-                  <label for="vlan-ip">IP VLAN Interface</label>
-                  <input
-                    type="text"
-                    id="vlan-ip"
-                    name="vlan-ip"
-                    placeholder="contoh: 192.168.10.1"
-                  />
-                </div>
-
-                <div class="input-group">
-                  <label for="vlan-subnet">Subnet CIDR</label>
-                  <input
-                    type="number"
-                    id="vlan-subnet"
-                    name="vlan-subnet"
-                    placeholder="contoh: 24"
-                  />
-                </div>
-
-                <!-- DHCP POOL SETTINGS -->
-                <div class="input-group">
-                  <label for="network">Network</label>
-                  <input
-                    type="text"
-                    id="vlan-network"
-                    name="vlan-network"
-                    placeholder="contoh: 192.168.10.0"
-                  />
-                </div>
-
-                <div class="input-group">
-                  <label for="dhcp-range-start">Range Mulai</label>
-                  <input
-                    type="text"
-                    id="dhcp-range-start"
-                    name="dhcp-range-start"
-                    placeholder="contoh: 192.168.10.10"
-                  />
-                </div>
-
-                <div class="input-group">
-                  <label for="dhcp-range-end">Range Akhir</label>
-                  <input
-                    type="text"
-                    id="dhcp-range-end"
-                    name="dhcp-range-end"
-                    placeholder="contoh: 192.168.10.100"
-                  />
-                </div>
-
-                <div class="input-group">
-                  <label for="dhcp-gateway">Gateway DHCP</label>
-                  <input
-                    type="text"
-                    id="dhcp-gateway"
-                    name="dhcp-gateway"
-                    placeholder="contoh: 192.168.10.1"
-                  />
-                </div>
-
-                <div class="input-group">
-                  <label for="dns-option">DNS</label>
-                  <select id="dns-option" name="dns-option">
-                    <option value="8.8.8.8">8.8.8.8 (Google DNS)</option>
-                    <option value="1.1.1.1">1.1.1.1 (Cloudfare DNS)</option>
-                    <option value="custom">Custom</option>
-                  </select>
-                </div>
-
-                <div
-                  class="input-group"
-                  id="custom-dns-field"
-                  style="display: none"
-                >
-                  <label for="custom-dns">DNS Kustom</label>
-                  <input
-                    type="text"
-                    id="custom-dns"
-                    name="custom-dns"
-                    placeholder="contoh: 1.1.1.1"
-                  />
-                </div>
+        <div class="config-grid">
+          <div class="form-wrapper">
+            <form id="config-form" class="form-group">
+              <div class="input-group">
+                <label for="device-type">Jenis Perangkat</label>
+                <select id="device-type" name="device-type" required>
+                  <option value="">-- Pilih --</option>
+                  <option value="switch">Switch</option>
+                  <option value="router">Router</option>
+                  <option value="ap">Access Point</option>
+                </select>
               </div>
-              <!-- PORT SETTINGS -->
-              <div id="port-container">
-                <div class="port-block">
+
+              <fieldset
+                id="switch-fields"
+                class="grid-layout"
+                style="display: none"
+              >
+                <legend>Konfigurasi Switch</legend>
+                <div class="form-grid">
+                  <!-- GLOBAL SETTINGS -->
                   <div class="input-group">
-                    <label for="port-1-id"
-                      >Port 1 (misal ke Router/AP/PC)</label
-                    >
+                    <label for="hostname">Hostname</label>
                     <input
                       type="text"
-                      name="port-id"
-                      placeholder="contoh: GE1/0/1"
+                      id="hostname"
+                      name="hostname"
+                      placeholder="contoh: Switch1"
                       required
                     />
                   </div>
 
                   <div class="input-group">
-                    <label for="port-1-mode">Mode Port</label>
-                    <select name="port-mode">
-                      <option value="access">Access</option>
-                      <option value="trunk">Trunk</option>
-                      <option value="route">Route</option>
+                    <label>Aktifkan DHCP Global?</label>
+                    <select
+                      id="dhcp-enable-global"
+                      name="dhcp-enable-global"
+                      required
+                    >
+                      <option value="yes">Ya</option>
+                      <option value="no">Tidak</option>
                     </select>
                   </div>
 
+                  <!-- VLAN SETTINGS -->
                   <div class="input-group">
-                    <label>
-                      <input type="checkbox" name="port-poe" />
-                      Aktifkan POE
-                    </label>
+                    <label for="vlan-id">VLAN ID</label>
+                    <input
+                      type="number"
+                      id="vlan-id"
+                      name="vlan-id"
+                      placeholder="contoh: 10"
+                    />
                   </div>
 
-                  <button
-                    type="button"
-                    class="remove-port-button"
+                  <div class="input-group">
+                    <label for="vlan-ip">IP VLAN Interface</label>
+                    <input
+                      type="text"
+                      id="vlan-ip"
+                      name="vlan-ip"
+                      placeholder="contoh: 192.168.10.1"
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label for="vlan-subnet">Subnet CIDR</label>
+                    <input
+                      type="number"
+                      id="vlan-subnet"
+                      name="vlan-subnet"
+                      placeholder="contoh: 24"
+                    />
+                  </div>
+
+                  <!-- DHCP POOL SETTINGS -->
+                  <div class="input-group">
+                    <label for="network">Network</label>
+                    <input
+                      type="text"
+                      id="vlan-network"
+                      name="vlan-network"
+                      placeholder="contoh: 192.168.10.0"
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label for="dhcp-range-start">Range Mulai</label>
+                    <input
+                      type="text"
+                      id="dhcp-range-start"
+                      name="dhcp-range-start"
+                      placeholder="contoh: 192.168.10.10"
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label for="dhcp-range-end">Range Akhir</label>
+                    <input
+                      type="text"
+                      id="dhcp-range-end"
+                      name="dhcp-range-end"
+                      placeholder="contoh: 192.168.10.100"
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label for="dhcp-gateway">Gateway DHCP</label>
+                    <input
+                      type="text"
+                      id="dhcp-gateway"
+                      name="dhcp-gateway"
+                      placeholder="contoh: 192.168.10.1"
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label for="dns-option">DNS</label>
+                    <select id="dns-option" name="dns-option">
+                      <option value="8.8.8.8">8.8.8.8 (Google DNS)</option>
+                      <option value="1.1.1.1">1.1.1.1 (Cloudfare DNS)</option>
+                      <option value="custom">Custom</option>
+                    </select>
+                  </div>
+
+                  <div
+                    class="input-group"
+                    id="custom-dns-field"
                     style="display: none"
                   >
-                    Hapus Port
-                  </button>
-                  <hr />
+                    <label for="custom-dns">DNS Kustom</label>
+                    <input
+                      type="text"
+                      id="custom-dns"
+                      name="custom-dns"
+                      placeholder="contoh: 1.1.1.1"
+                    />
+                  </div>
                 </div>
-              </div>
+                <!-- PORT SETTINGS -->
+                <div class="port-block" id="port-block">
+                  <label for="port-id">Manajemen Port</label>
+                  <div class="port-grid" id="port-grid">
+                    <div class="port-controls">
+                      <input
+                        type="text"
+                        name="port-id"
+                        placeholder="port ID (contoh: GE1/0/1)"
+                        required
+                      />
+                      <select name="port-mode">
+                        <option value="access">Access</option>
+                        <option value="trunk">Trunk</option>
+                      </select>
+                      <label class="poe-toggle">
+                        <input type="checkbox" name="port-poe" />
+                        <span>POE</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <button id="add-port-button" type="button">Tambah Port</button>
+              </fieldset>
 
-              <button type="button" id="add-port-button">Tambah Port</button>
-            </fieldset>
+              <button type="submit" id="generate-btn">
+                Generate Konfigurasi
+              </button>
+            </form>
+          </div>
 
-            <button type="submit" id="generate-btn">
-              Generate Konfigurasi
-            </button>
-          </form>
-        </div>
-
-        <div id="config-result-box" class="result-box">
-          <h3>Hasil Konfigurasi</h3>
-          <textarea id="config-output" rows="10" readonly></textarea>
-          <button id="copy-btn" onclick="copyConfig()">Salin</button>
-          <button id="save-btn">Simpan ke Database</button>
-          <button id="export-btn">Export ke TXT</button>
-          <button id="logout-btn">Logout</button>
+          <div id="config-result-box" class="result-box">
+            <h3>Hasil Konfigurasi</h3>
+            <textarea class="text-area" id="config-output" rows="10" readonly></textarea>
+            <button id="copy-btn" onclick="copyConfig()">Salin</button>
+            <button id="save-btn">Simpan ke Database</button>
+            <button id="export-btn">Export ke TXT</button>
+            <button id="logout-btn">Logout</button>
+          </div>
         </div>
         <hr />
         <section id="history-section">
@@ -231,6 +213,6 @@
     <div id="footer-placeholder"></div>
 
     <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/dashboard.js"></script>
+    <script src="../assets/js/dashboard.js" type="module"></script>
   </body>
 </html>

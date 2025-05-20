@@ -6,18 +6,19 @@ const generateConfigHash = (configText) => {
 };
 
 const dashboardService = {
-  saveConfig: async (configData) => {
-    const configHash = generateConfigHash(configData.config_text);
-    const configWithHash = { ...configData, config_hash: configHash };
-
-    return await dashboardModel.saveConfig(configWithHash);
-  },
+  saveConfig: async (configData, ports) => {
+  const configHash = generateConfigHash(configData.config_text);
+  return await dashboardModel.saveConfig(
+    { ...configData, config_hash: configHash },
+    ports
+  );
+},
 
   getConfigHistory: async (userId) => {
     return await dashboardModel.getConfigHistory(userId);
   },
 
-  deleteConfig: async (userId, configId) => {
+  deleteConfig: async (configId, userId) => {
     const affectedRows = await dashboardModel.deleteConfig(configId, userId);
     if (affectedRows === 0) {
       throw new Error("Configuration not found or already deleted");
