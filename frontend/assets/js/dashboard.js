@@ -24,7 +24,7 @@ class NetworkConfigApp {
       alert("Please login first");
       window.location.href = "./login.html";
     }
-    this.updateUserUI();
+    this.updateUserUI(this.user);
   }
 
   getUserData() {
@@ -43,7 +43,7 @@ class NetworkConfigApp {
     const portControls = document.createElement("div");
     portControls.className = "port-controls";
     portControls.innerHTML = `
-        <input type="text" name="port-id" placeholder="Port ID (e.g., Gig1/0/1)" required />
+        <input type="text" name="port-id" placeholder="port ID (contoh: GE1/0/1)" required />
         <select name="port-mode">
           <option value="access">Access</option>
           <option value="trunk">Trunk</option>
@@ -62,6 +62,12 @@ class NetworkConfigApp {
     portGrid.appendChild(portControls);
   };
 
+  toggleCustomDNSField(event) {
+    const selectedValue = event.target.value;
+    const customField = document.getElementById("custom-dns-field");
+    customField.style.display = selectedValue === "custom" ? "block" : "none";
+  }
+
   logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
@@ -75,6 +81,7 @@ class NetworkConfigApp {
       "logout-btn": { event: this.logout },
       "config-form": { event: this.generateConfig },
       "copy-btn": { event: this.copyConfig },
+      "dns-option": { event: this.toggleCustomDNSField, type: "change" },
       "save-btn": { event: this.saveConfig },
       "export-btn": { event: this.exportConfig },
       "tab-active": { event: this.loadConfigHistory },
@@ -201,7 +208,7 @@ class NetworkConfigApp {
   }
 
   collectPortData() {
-    const portBlocks = document.querySelectorAll(".port-controls"); // Sesuaikan selector dengan struktur HTML Anda
+    const portBlocks = document.querySelectorAll(".port-controls");
     return Array.from(portBlocks).map((block) => {
       return {
         port_id: block.querySelector('input[name="port-id"]').value,
@@ -258,7 +265,6 @@ class NetworkConfigApp {
 
       const response = await this.apiRequest(`/${configId}`, "DELETE");
       this.showSuccess("Configuration deleted successfully");
-      await this.loadConfigHistory(); // Refresh daftar konfigurasi
     } catch (error) {
       console.error("Error deleting config:", error);
       this.showError(error.message || "Failed to delete configuration");
@@ -272,7 +278,7 @@ class NetworkConfigApp {
 
       await this.apiRequest(`/restore/${configId}`, "PATCH");
       this.showSuccess("Configuration restored successfully");
-      this.loadDeletedHistory(); // Refresh daftar konfigurasi yang sudah dihapus
+      this.loadDeletedHistory();
     } catch (error) {
       console.error("Error restoring config:", error);
       this.showError(error.message || "Failed to restore configuration");
@@ -282,7 +288,7 @@ class NetworkConfigApp {
   // === HISTORY MANAGEMENT ===
   async loadConfigHistory() {
     try {
-      this.setActiveTab("tab-active"); // 🔥 tandai tab aktif
+      this.setActiveTab("tab-active");
       const history = await this.apiRequest("/history");
       this.lastHistory = history;
       this.renderHistoryList(history);
@@ -294,7 +300,7 @@ class NetworkConfigApp {
 
   async loadDeletedHistory() {
     try {
-      this.setActiveTab("tab-deleted"); // tandai tab aktif
+      this.setActiveTab("tab-deleted");
       const history = await this.apiRequest("/deleted");
       this.renderDeletedList(history);
     } catch (error) {
@@ -307,17 +313,59 @@ class NetworkConfigApp {
     const listContainer = document.getElementById("history-list");
     if (!listContainer) return;
 
-    listContainer.innerHTML =
-      history.length > 0
-        ? history.map((item) => this.createHistoryItem(item)).join("")
-        : '<div class="no-history">No configurations saved yet</div>';
+    listContainer.textContent = "";
 
-    document.querySelectorAll(".delete-btn").forEach((button) => {
-      button.addEventListener("click", (e) => {
-        const configId = e.target.dataset.configId;
-        this.deleteConfig(configId);
-      });
+    if (history.length === 0) {
+      const noHistory = document.createElement("div");
+      noHistory.className = "no-history";
+      noHistory.textContent = "No configurations saved yet";
+      listContainer.appendChild(noHistory);
+      return;
+    }
+
+    history.forEach((item) => {
+      const itemElement = document.createElement("div");
+      itemElement.className = "history-item";
+
+      // Gunakan textContent untuk teks biasa
+      const header = document.createElement("div");
+      header.className = "history-header";
+      header.innerHTML = `
+      <span class="device-type">${this.escapeHtml(
+        item.device_type || "Unknown"
+      )}</span>
+      <span class="hostname">${this.escapeHtml(
+        item.hostname || "No hostname"
+      )}</span>
+    `;
+
+      // Tambahkan method escapeHtml di class
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = "Hapus Riwayat";
+      deleteBtn.dataset.configId = item.id;
+      deleteBtn.addEventListener("click", () => this.deleteConfig(item.id));
+
+      header.appendChild(deleteBtn);
+      itemElement.appendChild(header);
+
+      const pre = document.createElement("pre");
+      pre.className = "config-text";
+      pre.textContent = item.config_text;
+      itemElement.appendChild(pre);
+
+      listContainer.appendChild(itemElement);
     });
+  }
+
+  // Tambahkan method escape
+  escapeHtml(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
   renderDeletedList(history) {
@@ -449,7 +497,7 @@ class NetworkConfigApp {
       this.showSuccess("Configuration copied to clipboard");
     } catch (error) {
       console.error("Error copying config:", error);
-      this.showError("Failed to copy configuration");
+      this.showError(error.message || "Failed to copy configuration");
     }
   };
 
@@ -473,14 +521,32 @@ class NetworkConfigApp {
 
   // === UI HELPERS ===
   showSuccess(message) {
-    alert(message); // Replace with a proper notification system
+    alert(message);
   }
 
   showError(message) {
-    alert(message); // Replace with a proper notification system
+    alert(message);
+  }
+
+  destroy() {
+    // Hapus semua event listeners
+    const events = ["click", "submit"];
+    events.forEach((type) => {
+      document.body.removeEventListener(type, this.boundHandlers[type]);
+    });
+
+    // Hapus height sync jika ada
+    if (this.heightSync) {
+      this.heightSync.destroy();
+    }
+
+    // Hapus reference
+    window.app = null;
   }
 }
 
 // Initialize the application
 const app = new NetworkConfigApp();
-window.app = app; // Make available for inline event handlers
+const sync = new HeightSynchronizer(".form-group", ".result-box");
+sync.destroy();
+window.app = app;

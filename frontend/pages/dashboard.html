@@ -2,8 +2,11 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dashboard - H3C Config Tool</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Dashboard - H3C Config Generator</title>
     <link rel="stylesheet" href="../assets/css/dashboard.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/boxicons@2.0.8/css/boxicons.min.css"
@@ -17,7 +20,16 @@
       <div class="main-wrapper">
         <div class="welcome-message">
           <h2>Dashboard Teknisi</h2>
-          <p>Halo, <span id="name"></span>!</p>
+          <div class="user-info">
+            <p>
+              <i class="bx bx-user-circle" aria-hidden="true"></i>
+              <span>Halo, <strong id="name"></strong></span> !
+            </p>
+            <button class="logout-btn" id="logout-btn" aria-label="Logout">
+              <i class="bx bx-log-out"></i>
+              <span class="logout-text">Keluar</span>
+            </button>
+          </div>
         </div>
         <div class="config-grid">
           <div class="form-wrapper">
@@ -180,7 +192,13 @@
                     </div>
                   </div>
                 </div>
-                <button id="add-port-button" type="button">Tambah Port</button>
+                <button
+                  class="add-port-button"
+                  id="add-port-button"
+                  type="button"
+                >
+                  Tambah Port
+                </button>
               </fieldset>
 
               <button type="submit" id="generate-btn">
@@ -191,22 +209,32 @@
 
           <div id="config-result-box" class="result-box">
             <h3>Hasil Konfigurasi</h3>
-            <textarea class="text-area" id="config-output" rows="10" readonly></textarea>
-            <button id="copy-btn" onclick="copyConfig()">Salin</button>
-            <button id="save-btn">Simpan ke Database</button>
-            <button id="export-btn">Export ke TXT</button>
-            <button id="logout-btn">Logout</button>
+            <textarea
+              class="text-area"
+              id="config-output"
+              rows="10"
+              readonly
+            ></textarea>
+            <div class="action-buttons">
+              <button id="copy-btn" class="btn-sm">Salin</button>
+              <button id="save-btn" class="btn-sm btn-success">
+                Simpan ke Database
+              </button>
+              <button id="export-btn" class="btn-sm">Export ke TXT</button>
+            </div>
           </div>
         </div>
-        <hr />
-        <section id="history-section">
-          <h3>Riwayat Konfigurasi Anda</h3>
-          <div id="history-tab">
-            <button id="tab-active">Histori Aktif</button>
-            <button id="tab-deleted">Histori Terhapus</button>
-          </div>
-          <div id="history-list"></div>
-        </section>
+        <!-- <hr /> -->
+        <div class="history-wrapper">
+          <section id="history-section">
+            <h3>Riwayat Konfigurasi Anda</h3>
+            <div id="history-tab">
+              <button id="tab-active">Histori Aktif</button>
+              <button id="tab-deleted">Histori Terhapus</button>
+            </div>
+            <div id="history-list"></div>
+          </section>
+        </div>
       </div>
     </main>
 
