@@ -9,7 +9,7 @@ const userService = {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const result = await userModel.createUser(name, email, hashedPassword, role);
+    const result = await userModel.createUser({name, email, password: hashedPassword, role});
     if (result.affectedRows === 0) throw new Error("Gagal mendaftarkan user");
 
     return "Registrasi berhasil!";

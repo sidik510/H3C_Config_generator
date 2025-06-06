@@ -4,6 +4,7 @@ import pool from "../config/db.js";
 const userModel = {
   createUser: async (userData) => {
     const { name, email, password, role } = userData;
+    console.log("DEBUG CREATE USER INPUT:", { name, email, password, role });
 
     const query = `
     INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)

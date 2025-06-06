@@ -43,7 +43,7 @@ class NetworkConfigApp {
     const portControls = document.createElement("div");
     portControls.className = "port-controls";
     portControls.innerHTML = `
-        <input type="text" name="port-id" placeholder="port ID (contoh: GE1/0/1)" required />
+        <input type="text" name="port-id" placeholder="port ID (E.g.: GE1/0/1)" required />
         <select name="port-mode">
           <option value="access">Access</option>
           <option value="trunk">Trunk</option>
@@ -52,7 +52,7 @@ class NetworkConfigApp {
           <input type="checkbox" name="port-poe" />
           <span>POE</span>
         </label>
-        <button class="remove-port">Hapus</button>
+        <button class="remove-port">Remove</button>
     `;
 
     portControls.querySelector(".remove-port").addEventListener("click", () => {

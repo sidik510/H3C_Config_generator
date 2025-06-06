@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Dashboard - H3C Config Generator</title>
+    <title>Dashboard - H3C Configs Generator</title>
     <link rel="stylesheet" href="../assets/css/dashboard.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/boxicons@2.0.8/css/boxicons.min.css"
@@ -19,15 +19,15 @@
     <main class="dashboard-container">
       <div class="main-wrapper">
         <div class="welcome-message">
-          <h2>Dashboard Teknisi</h2>
+          <h2>Technician Dashboard</h2>
           <div class="user-info">
             <p>
               <i class="bx bx-user-circle" aria-hidden="true"></i>
-              <span>Halo, <strong id="name"></strong></span> !
+              <span>Hello, <strong id="name"></strong></span> !
             </p>
             <button class="logout-btn" id="logout-btn" aria-label="Logout">
               <i class="bx bx-log-out"></i>
-              <span class="logout-text">Keluar</span>
+              <span class="logout-text">Logout</span>
             </button>
           </div>
         </div>
@@ -35,9 +35,9 @@
           <div class="form-wrapper">
             <form id="config-form" class="form-group">
               <div class="input-group">
-                <label for="device-type">Jenis Perangkat</label>
+                <label for="device-type">Device Type</label>
                 <select id="device-type" name="device-type" required>
-                  <option value="">-- Pilih --</option>
+                  <option value="">-- Choose --</option>
                   <option value="switch">Switch</option>
                   <option value="router">Router</option>
                   <option value="ap">Access Point</option>
@@ -49,7 +49,7 @@
                 class="grid-layout"
                 style="display: none"
               >
-                <legend>Konfigurasi Switch</legend>
+                <legend>Switch Configuration</legend>
                 <div class="form-grid">
                   <!-- GLOBAL SETTINGS -->
                   <div class="input-group">
@@ -58,20 +58,20 @@
                       type="text"
                       id="hostname"
                       name="hostname"
-                      placeholder="contoh: Switch1"
+                      placeholder="E.g.: Switch1"
                       required
                     />
                   </div>
 
                   <div class="input-group">
-                    <label>Aktifkan DHCP Global?</label>
+                    <label>Enable DHCP Global?</label>
                     <select
                       id="dhcp-enable-global"
                       name="dhcp-enable-global"
                       required
                     >
-                      <option value="yes">Ya</option>
-                      <option value="no">Tidak</option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
                     </select>
                   </div>
 
@@ -82,17 +82,17 @@
                       type="number"
                       id="vlan-id"
                       name="vlan-id"
-                      placeholder="contoh: 10"
+                      placeholder="E.g.: 10"
                     />
                   </div>
 
                   <div class="input-group">
-                    <label for="vlan-ip">IP VLAN Interface</label>
+                    <label for="vlan-ip">VLAN Interface IP</label>
                     <input
                       type="text"
                       id="vlan-ip"
                       name="vlan-ip"
-                      placeholder="contoh: 192.168.10.1"
+                      placeholder="E.g.: 192.168.10.1"
                     />
                   </div>
 
@@ -102,7 +102,7 @@
                       type="number"
                       id="vlan-subnet"
                       name="vlan-subnet"
-                      placeholder="contoh: 24"
+                      placeholder="E.g.: 24"
                     />
                   </div>
 
@@ -113,37 +113,37 @@
                       type="text"
                       id="vlan-network"
                       name="vlan-network"
-                      placeholder="contoh: 192.168.10.0"
+                      placeholder="E.g.: 192.168.10.0"
                     />
                   </div>
 
                   <div class="input-group">
-                    <label for="dhcp-range-start">Range Mulai</label>
+                    <label for="dhcp-range-start">Range Start</label>
                     <input
                       type="text"
                       id="dhcp-range-start"
                       name="dhcp-range-start"
-                      placeholder="contoh: 192.168.10.10"
+                      placeholder="E.g.: 192.168.10.10"
                     />
                   </div>
 
                   <div class="input-group">
-                    <label for="dhcp-range-end">Range Akhir</label>
+                    <label for="dhcp-range-end">Range End</label>
                     <input
                       type="text"
                       id="dhcp-range-end"
                       name="dhcp-range-end"
-                      placeholder="contoh: 192.168.10.100"
+                      placeholder="E.g.: 192.168.10.100"
                     />
                   </div>
 
                   <div class="input-group">
-                    <label for="dhcp-gateway">Gateway DHCP</label>
+                    <label for="dhcp-gateway">DHCP Gateway</label>
                     <input
                       type="text"
                       id="dhcp-gateway"
                       name="dhcp-gateway"
-                      placeholder="contoh: 192.168.10.1"
+                      placeholder="E.g.: 192.168.10.1"
                     />
                   </div>
 
@@ -166,19 +166,19 @@
                       type="text"
                       id="custom-dns"
                       name="custom-dns"
-                      placeholder="contoh: 1.1.1.1"
+                      placeholder="E.g.: 1.1.1.1"
                     />
                   </div>
                 </div>
                 <!-- PORT SETTINGS -->
                 <div class="port-block" id="port-block">
-                  <label for="port-id">Manajemen Port</label>
+                  <label for="port-id">Port Management</label>
                   <div class="port-grid" id="port-grid">
                     <div class="port-controls">
                       <input
                         type="text"
                         name="port-id"
-                        placeholder="port ID (contoh: GE1/0/1)"
+                        placeholder="port ID (E.g.: GE1/0/1)"
                         required
                       />
                       <select name="port-mode">
@@ -197,18 +197,18 @@
                   id="add-port-button"
                   type="button"
                 >
-                  Tambah Port
+                  Add Port
                 </button>
               </fieldset>
 
               <button type="submit" id="generate-btn">
-                Generate Konfigurasi
+                Generate Configuration
               </button>
             </form>
           </div>
 
           <div id="config-result-box" class="result-box">
-            <h3>Hasil Konfigurasi</h3>
+            <h3>Configuration Result</h3>
             <textarea
               class="text-area"
               id="config-output"
@@ -216,21 +216,20 @@
               readonly
             ></textarea>
             <div class="action-buttons">
-              <button id="copy-btn" class="btn-sm">Salin</button>
+              <button id="copy-btn" class="btn-sm">Copy</button>
               <button id="save-btn" class="btn-sm btn-success">
-                Simpan ke Database
+                Save to Database
               </button>
-              <button id="export-btn" class="btn-sm">Export ke TXT</button>
+              <button id="export-btn" class="btn-sm">Export to TXT</button>
             </div>
           </div>
         </div>
-        <!-- <hr /> -->
         <div class="history-wrapper">
           <section id="history-section">
-            <h3>Riwayat Konfigurasi Anda</h3>
+            <h3>Your Configuration History</h3>
             <div id="history-tab">
-              <button id="tab-active">Histori Aktif</button>
-              <button id="tab-deleted">Histori Terhapus</button>
+              <button id="tab-active">Active History</button>
+              <button id="tab-deleted">Deleted History</button>
             </div>
             <div id="history-list"></div>
           </section>

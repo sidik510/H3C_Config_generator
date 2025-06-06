@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - H3C Config Tool</title>
-    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/user.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/boxicons@2.0.8/css/boxicons.min.css"
       rel="stylesheet"
@@ -18,15 +18,15 @@
     <main class="page-container">
       <div class="main-wrapper">
         <div class="welcome-message">
-          <h2>Daftar Akun</h2>
-          <h3>Silahkan isi data anda</h3>
+          <h2>Account Registration</h2>
+          <h3>Please fill in your data</h3>
         </div>
 
         <div class="form-wrapper">
           <form id="register-form" class="form-group">
             <div class="form-grid">
               <div class="input-group">
-                <label for="name">Nama Lengkap</label>
+                <label for="name">Fullname</label>
                 <input type="text" id="name" name="name" required />
               </div>
 
@@ -58,7 +58,7 @@
               </div>
 
               <div class="input-group password-group">
-                <label for="confirm-password">Konfirmasi Password</label>
+                <label for="confirm-password">Password Confirmation</label>
                 <div class="password-wrapper">
                   <input
                     type="password"
@@ -75,7 +75,7 @@
               </div>
 
               <div class="input-group">
-                <label for="role">Peran</label>
+                <label for="role">Role</label>
                 <select id="role" name="role">
                   <option value="technician">Technician</option>
                   <option value="admin">Admin</option>
@@ -83,10 +83,10 @@
               </div>
             </div>
 
-            <button type="submit">Daftar</button>
+            <button type="submit">Register</button>
             <p id="message" class="message"></p>
             <p class="back-link">
-              <a href="login.html">Kembali ke Login</a>
+              <a href="login.html">Back to Login</a>
             </p>
           </form>
         </div>
