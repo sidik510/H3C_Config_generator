@@ -329,6 +329,26 @@ fieldset {
   box-shadow: 0 0 0 4px rgba(214, 40, 40, 0.1);
 }
 
+input.valid {
+  border-color: #28a745;
+}
+
+input.invalid {
+  border-color: #dc3545;
+}
+
+.error-message {
+  display: none;
+  color: #dc3545;
+  font-size: var(--font-size-sm);
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+input.invalid ~ .error-message {
+  display: block;
+}
+
 /* Port Controls */
 .port-block {
   display: flex;

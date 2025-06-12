@@ -179,7 +179,7 @@ h3 {
 
 .welcome-message:hover {
   background-color: var(--primary-light);
-  transform: scale(1.02);
+  /* transform: scale(1.02); */
 }
 
 .welcome-message h3 {

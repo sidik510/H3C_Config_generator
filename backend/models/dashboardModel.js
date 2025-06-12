@@ -88,7 +88,6 @@ const dashboardModel = {
   }
 },
 
-
   // Mendapatkan riwayat konfigurasi berdasarkan user_id
   getConfigHistory: async (userId) => {
     const query = `
