@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - H3C Config Tool</title>
+    <link rel="stylesheet" href="../assets/css/user.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/boxicons@2.0.8/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" src="../assets/js/main.js" defer></script>
+    <script type="module" src="../assets/js/register.js" defer></script>
+  </head>
+  <body>
+    <div id="header-placeholder"></div>
+
+    <main class="page-container">
+      <div class="main-wrapper grid-layout">
+        <div class="welcome-section">
+          <div class="welcome-message">
+            <h2>Create Your Account</h2>
+            <p>Join our platform to get started</p>
+          </div>
+          <div class="welcome-image">
+            <img src="../assets/images/auth-illustration.svg" alt="Welcome illustration" />
+          </div>
+        </div>
+
+        <div class="form-section">
+          <form id="register-form" class="form-group" novalidate>
+            <div class="form-grid">
+              <!-- Fullname dan Email dalam satu baris -->
+              <div class="input-group fullname-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="fullname" required autocomplete="name" placeholder="John Doe" />
+                <p id="name-validation-message" class="validation-message"></p>
+              </div>
+
+              <div class="input-group email-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required autocomplete="email" placeholder="your@email.com" />
+                <p id="email-validation-message" class="validation-message"></p>
+              </div>
+
+              <!-- Password dan Confirm Password dalam satu baris -->
+              <div class="input-group password-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                  <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="••••••••" />
+                  <i class="bx bx-hide toggle-password" toggle="#password"></i>
+                </div>
+                <div class="password-strength-meter">
+                  <div class="strength-bar"></div>
+                </div>
+                <div id="password-rules">
+                  <ul>
+                    <li id="rule-length">8+ characters</li>
+                    <li id="rule-uppercase">A-Z</li>
+                    <li id="rule-lowercase">a-z</li>
+                    <li id="rule-number">0-9</li>
+                    <li id="rule-symbol">!@#$</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="input-group confirm-group">
+                <label for="confirm-password">Confirm</label>
+                <div class="password-wrapper">
+                  <input type="password" id="confirm-password" name="confirm-password" required autocomplete="new-password" placeholder="••••••••" />
+                  <i class="bx bx-hide toggle-password" toggle="#confirm-password"></i>
+                </div>
+                <p id="match-message" class="match-message"></p>
+              </div>
+
+              <!-- Role dan Submit button -->
+              <div class="input-group role-group">
+                <label for="role">Role</label>
+                <select id="role" name="role">
+                  <option value="" disabled selected>Select role</option>
+                  <option value="technician">Technician</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+
+              <div class="action-group">
+                <button type="submit" class="btn-primary">
+                  <span class="btn-text">Create Account</span>
+                  <span class="btn-loader" aria-hidden="true"></span>
+                </button>
+                <p id="message" class="message"></p>
+                <div class="auth-footer">
+                  <p>Already have an account? <a href="login.html">Sign in</a></p>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+  </body>
+</html>

@@ -64,16 +64,5 @@ setupDeviceFields() {
 // Inisialisasi class
 new GlobalUI();
 
-// // === MODULE 4: CUSTOM DNS FIELD ===
-// function initCustomDNS() {
-//   const dnsSelect = document.getElementById("dns-option");
-//   const customField = document.getElementById("custom-dns-field");
-
-//   if (dnsSelect && customField) {
-//     dnsSelect.addEventListener("change", () => {
-//       customField.style.display = dnsSelect.value === "custom" ? "block" : "none";
-//     });
-//   }
-// }
 
 

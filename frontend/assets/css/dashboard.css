@@ -464,47 +464,197 @@ input.invalid ~ .error-message {
 
 /* History Section */
 .history-wrapper {
-  display: flex;
-  flex-direction: column;
+  margin-top: var(--element-margin);
+  background: var(--dark); /* Menggunakan warna gelap utama */
+  border-radius: var(--border-radius);
+  border: solid 1px var(--gray-light);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Shadow tetap gelap */
   padding: var(--element-padding);
-  border: 1px solid var(--gray-light);
-  border-radius: 4px;
   width: 100%;
+}
+
+#history-section h3 {
+  margin-top: 0;
+  text-align: center;
+  color: var(--light); /* Warna teks terang */
+  border-bottom: 1px solid var(--gray-light); /* Garis bawah abu-abu */
+  padding-bottom: 0.5rem;
 }
 
 #history-tab {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: var(--element-margin);
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-light); /* Garis bawah abu-abu */
 }
 
 #history-tab button {
-  flex: 1;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* font-weight: 500; */
+  color: var(--gray-light); /*Warna teks abu-abu*/
+  position: relative;
+  margin-right: 0.5rem;
 }
 
-.tab-btn.active {
-  background-color: var(--info);
-  color: white;
-  font-weight: bold;
+#history-tab button.active {
+  color: var(--primary); /* Warna aktif primer */
+}
+
+#history-tab button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  /* background: var(--primary); Garis bawah aktif primer */
 }
 
 #history-list {
-  border: 1px solid var(--gray-light);
-  border-radius: var(--border-radius);
-  margin-top: var(--element-margin);
-  max-height: 50vh;
-  overflow-y: auto;
-  padding: var(--element-padding);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-#history-list::-webkit-scrollbar {
-  width: 6px;
+.history-item {
+  border: 1px solid var(--gray-light); /* Border abu-abu */
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  background-color: var(--secondary); /* Warna latar belakang sekunder */
 }
 
-#history-list::-webkit-scrollbar-thumb {
-  background-color: var(--gray);
+/* .history-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3); Shadow lebih gelap saat hover
+} */
+
+.history-item.deleted {
+  opacity: 0.9;
+  background-color: color-mix(in srgb, var(--secondary) 80%, black); /* Sedikit lebih gelap saat dihapus */
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--dark); /* Warna gelap untuk header item history */
+  border-bottom: 1px solid var(--gray); /* Garis bawah abu-abu */
+}
+
+.device-type-label {
+  margin-right: 0.25rem;
+}
+
+.device-type {
+  color: var(--danger); /* Warna teks terang */
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
   border-radius: 4px;
+  margin-left: 0.5rem;
+  margin-right: 1rem;
+}
+
+.hostname-label {
+  margin-right: 0.25rem;
+}
+
+.hostname {
+  color: var(--danger); /* Warna teks terang */
+  padding: 0.25rem 0.5rem;
+  font-weight: 600;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  margin-right: 1rem;
+  flex-grow: 1;
+}
+
+.history-header button {
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.delete-btn {
+  background-color: var(--primary); /* Warna danger */
+  color: var(--light); /* Warna teks terang */
+}
+
+.delete-btn:hover {
+  background-color: color-mix(in srgb, var(--danger) 90%, black); /* Sedikit lebih gelap saat hover */
+}
+
+.restore-btn {
+  background-color: var(--success); /* Warna success */
+  color: var(--light); /* Warna teks terang */
+}
+
+.restore-btn:hover {
+  background-color: color-mix(in srgb, var(--success) 90%, black); /* Sedikit lebih gelap saat hover */
+}
+
+.config-text {
+  padding: 1rem;
+  margin: 0;
+  background: var(--dark); /* Warna gelap */
+  color: var(--warning); /* Warna warning untuk teks konfigurasi */
+  font-family: monospace;
+  font-size: 0.9rem;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.history-footer {
+  padding: 0.5rem 1rem;
+  background: var(--dark); /* Warna gelap */
+  border-top: 1px solid var(--gray); /* Garis atas abu-abu */
+  text-align: right;
+}
+
+.timestamp {
+  color: var(--gray-light); /* Warna abu-abu terang */
+  font-size: 0.8rem;
+}
+
+.empty-history {
+  text-align: center;
+  padding: 2rem;
+  color: var(--gray); /* Warna abu-abu */
+  font-style: italic;
+}
+
+.loading-history {
+  text-align: center;
+  padding: 2rem;
+  color: var(--gray-light); /* Warna abu-abu terang */
+}
+
+.error-history {
+  text-align: center;
+  padding: 2rem;
+  color: var(--danger); /* Warna danger */
+  background: color-mix(in srgb, var(--danger) 10%, var(--dark)); /* Latar belakang danger yang lebih terang */
+  border-radius: 4px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 3px solid rgba(0, 48, 73, 0.3); /* Menggunakan secondary color dengan opasitas */
+  border-radius: 50%;
+  border-top-color: var(--secondary); /* Warna secondary */
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 0.5rem;
+  vertical-align: middle;
 }
 
 @media (min-width: 1200px) {

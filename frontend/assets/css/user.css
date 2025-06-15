@@ -153,6 +153,7 @@ h3 {
 }
 
 .main-wrapper {
+  /* border: solid 1px var(--gray-light); */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -189,7 +190,7 @@ h3 {
 
 .form-wrapper {
   box-sizing: border-box;
-  /* margin-top: var(--element-margin); */
+  margin-top: var(--element-margin);
   width: 100%;
   /* max-width: 20rem; */
 }
@@ -209,7 +210,10 @@ h3 {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--element-padding);
+  padding: var(--element-padding);
   margin-bottom: var(--element-margin);
+  /* border: 1px solid var(--gray-light); */
+  width: 100%;
 }
 
 .input-group {
@@ -262,15 +266,12 @@ h3 {
   color: var(--gray);
 }
 
+#match-message,
+.validation-message,
 #password-rules {
-  background-color: #f8f9fa;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin-top: 10px;
-  font-size: 0.6rem;
-  color: #333;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  font-style: italic;
+  padding: 5px 2px;
+  font-size: 0.7rem;
 }
 
 #password-rules ul {
@@ -289,21 +290,6 @@ h3 {
 }
 
 #password-rules li.invalid {
-  color: #dc3545;
-}
-
-#match-message {
-  margin-top: 8px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: color 0.3s;
-}
-
-#match-message.success {
-  color: var(--success);
-}
-
-#match-message.error {
   color: #dc3545;
 }
 
